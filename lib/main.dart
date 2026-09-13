@@ -6,10 +6,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: const HomePage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      builder: (context, child) {
+        return Directionality(textDirection: TextDirection.rtl, child: child!);
+      },
+
+      home: const HomePage(),
+    );
   }
 }
 
@@ -18,6 +25,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E7),
 
@@ -32,60 +42,61 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Center(
+
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-
           children: [
-            Container(
-              height: 250,
-              width: 500,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 248),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(20),
+            Expanded(
+              child: Container(
+                width: w * 0.9,
+                height: h * 0.6,
 
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  Image.asset(
-                    'asset/sun-logo-images-vector.jpg',
-                    fit: BoxFit.contain,
-                    height: 100,
-                    width: 100,
-                  ),
-
-                  const Text(
-                    "Welcome to MyDay!",
-                    style: TextStyle(
-                      color: Color(0xFF341F1A),
-                      fontFamily: "serif",
-                      fontWeight: FontWeight.bold,
-
-                      fontSize: 30,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 255, 248),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
                     ),
-                  ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(20),
 
-                  const Text(
-                    "Keep your tasks organized, track your progress, and take control of your day.",
-                    style: TextStyle(
-                      color: Color(0xFF341F1A),
-                      fontFamily: "serif",
-                      fontSize: 20,
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'asset/sun-logo-images-vector.jpg',
+                      fit: BoxFit.contain,
+                      height: 100,
+                      width: 100,
                     ),
-                  ),
-                ],
+
+                    const Text(
+                      "مرحبا بك في MyDay!",
+                      style: TextStyle(
+                        color: Color(0xFF341F1A),
+                        fontFamily: "serif",
+                        fontWeight: FontWeight.bold,
+
+                        fontSize: 30,
+                      ),
+                    ),
+
+                    const Text(
+                      "نظّم مهامك، تابع إنجازك، واستمتع بيوم أكثر تنظيمًا",
+                      style: TextStyle(
+                        color: Color(0xFF341F1A),
+                        fontFamily: "serif",
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 50),
