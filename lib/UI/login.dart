@@ -8,6 +8,34 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   @override
+  String username = 'Najla';
+  String password = '1234567';
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      if (_usernameController.text == username &&
+          _passwordController.text == password) {
+        Navigator.popAndPushNamed(context, '/home');
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Invalid username or password.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -83,130 +111,149 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
 
-                      child: Column(
-                        children: [
-                          const Text(
-                            "أهلا بعودتك..",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color(0xFF341F1A),
-                              fontFamily: "Alexandria",
-                            ),
-                          ),
-
-                          const SizedBox(height: 30),
-
-                          TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'اسم المستخدم',
-                              labelStyle: const TextStyle(
-                                fontFamily: 'Alexandria',
-                                color: Color(0xFF341F1A),
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.person_outline,
-                                color: Color(0xFF341F1A),
-                              ),
-                              fillColor: const Color(0xFFFFF8E7),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'كلمة المرور',
-                              labelStyle: const TextStyle(
-                                fontFamily: 'Alexandria',
-                                color: Color(0xFF341F1A),
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.lock_outline,
-                                color: Color(0xFF341F1A),
-                              ),
-                              fillColor: const Color(0xFFFFF8E7),
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 10),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Flexible(
-                                child: Text(
-                                  "ليس لديك حساب؟",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF341F1A),
-                                    fontFamily: "Alexandria",
-                                  ),
-                                ),
-                              ),
-
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/signup');
-                                },
-                                child: const Text(
-                                  "سجل الآن",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF341F1A),
-                                    fontWeight: FontWeight.bold,
-
-                                    fontFamily: "Alexandria",
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/forgot-password');
-                            },
-                            child: const Text(
-                              "نسيت كلمة المرور؟",
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const Text(
+                              "أهلا بعودتك..",
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 20,
                                 color: Color(0xFF341F1A),
                                 fontFamily: "Alexandria",
                               ),
                             ),
-                          ),
 
-                          const SizedBox(height: 10),
+                            const SizedBox(height: 30),
 
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFCFE1E2),
-                                foregroundColor: const Color(0xFF341F1A),
-                              ),
-                              onPressed: () {},
-                              child: const Text(
-                                "Login",
-                                style: TextStyle(
+                            TextFormField(
+                              controller: _usernameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'يرجى إدخال اسم المستخدم';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'اسم المستخدم',
+                                labelStyle: const TextStyle(
+                                  fontFamily: 'Alexandria',
                                   color: Color(0xFF341F1A),
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "Alexandria",
-                                  fontSize: 18,
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.person_outline,
+                                  color: Color(0xFF341F1A),
+                                ),
+                                fillColor: const Color(0xFFFFF8E7),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+
+                            const SizedBox(height: 16),
+
+                            TextFormField(
+                              obscureText: true,
+                              controller: _passwordController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'يرجى إدخال كلمة المرور';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'كلمة المرور',
+                                labelStyle: const TextStyle(
+                                  fontFamily: 'Alexandria',
+                                  color: Color(0xFF341F1A),
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: Color(0xFF341F1A),
+                                ),
+                                fillColor: const Color(0xFFFFF8E7),
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Flexible(
+                                  child: Text(
+                                    "ليس لديك حساب؟",
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF341F1A),
+                                      fontFamily: "Alexandria",
+                                    ),
+                                  ),
+                                ),
+
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/signup');
+                                  },
+                                  child: const Text(
+                                    "سجل الآن",
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF341F1A),
+                                      fontWeight: FontWeight.bold,
+
+                                      fontFamily: "Alexandria",
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            TextButton(
+                              onPressed: () {
+                                // Navigator.pushNamed(context, '/forgot-password');
+                              },
+                              child: const Text(
+                                "نسيت كلمة المرور؟",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF341F1A),
+                                  fontFamily: "Alexandria",
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFCFE1E2),
+                                  foregroundColor: const Color(0xFF341F1A),
+                                ),
+                                onPressed: () {
+                                  _login();
+                                },
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Color(0xFF341F1A),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Alexandria",
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

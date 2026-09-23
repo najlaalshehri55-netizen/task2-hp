@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hashplus_flutter/UI/welcome.dart';
 import 'package:hashplus_flutter/UI/login.dart';
 import 'package:hashplus_flutter/UI/signup.dart';
+import 'package:hashplus_flutter/UI/Home_page.dart';
+import 'package:hashplus_flutter/UI/mainpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => welcome(title: 'MyDay'),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const signup_page(),
+        '/home': (context) => const Mainpage(),
       },
 
       builder: (context, child) {
