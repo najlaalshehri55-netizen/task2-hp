@@ -1,206 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:hashplus_flutter/UI/AddTaskPage.dart';
+import 'package:hashplus_flutter/controllers/tasks_controller.dart';
+import 'package:hashplus_flutter/services/time_arabic.dart';
 
 class Tasks extends StatefulWidget {
-  const Tasks({super.key});
+  const Tasks({super.key, this.controller});
+
+  /// Optional controller, injected in tests; defaults to a real one.
+  final TasksController? controller;
 
   @override
   State<Tasks> createState() => _TasksState();
 }
 
 class _TasksState extends State<Tasks> {
-  List<Map<String, dynamic>> tasks = [
-    {
-      "title": "المهمة 1",
-      "description": "بناء تطبيق باستخدام Flutter",
-      "time": "8:00 صباحًا",
-      "isCompleted": false,
-    },
-    {
-      "title": "المهمة 2",
-      "description": "ممارسة التمارين الرياضية",
-      "time": "10:00 صباحًا",
-      "isCompleted": false,
-    },
-    {
-      "title": "المهمة 3",
-      "description": "تنظيف المنزل",
-      "time": "2:00 مساءً",
-      "isCompleted": false,
-    },
-    {
-      "title": "المهمة 4",
-      "description": "قراءة كتاب",
-      "time": "5:00 مساءً",
-      "isCompleted": false,
-    },
-    {
-      "title": "المهمة 5",
-      "description": "إعداد العشاء",
-      "time": "8:00 مساءً",
-      "isCompleted": false,
-    },
-  ];
+  late final TasksController _controller =
+      widget.controller ?? TasksController();
 
-  void editTask(int index) {
-    TextEditingController titleController = TextEditingController(
-      text: tasks[index]["title"],
-    );
-
-    TextEditingController descriptionController = TextEditingController(
-      text: tasks[index]["description"],
-    );
-
-    TextEditingController timeController = TextEditingController(
-      text: tasks[index]["time"],
-    );
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          "تعديل المهمة",
-          style: TextStyle(
-            color: Color(0xFF341F1A),
-            fontFamily: "Alexandria",
-            fontWeight: FontWeight.bold,
+  @override
+  void initState() {
+    super.initState();
+    _controller.onStateChanged = () {
+      if (mounted) setState(() {});
+    };
+    _controller.onShowSnack = (message, {backgroundColor, textColor}) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: TextStyle(fontFamily: "Alexandria", color: textColor),
           ),
+          backgroundColor: backgroundColor,
         ),
-
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  labelText: "عنوان المهمة",
-                  labelStyle: const TextStyle(
-                    fontFamily: "Alexandria",
-                    color: Color(0xFF341F1A),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.task_alt,
-                    color: Color(0xFF341F1A),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFFFFF8E7),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: "وصف المهمة",
-                  labelStyle: const TextStyle(
-                    fontFamily: "Alexandria",
-                    color: Color(0xFF341F1A),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.description_outlined,
-                    color: Color(0xFF341F1A),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFFFFF8E7),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              TextField(
-                controller: timeController,
-                decoration: InputDecoration(
-                  labelText: "الوقت",
-                  labelStyle: const TextStyle(
-                    fontFamily: "Alexandria",
-                    color: Color(0xFF341F1A),
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.access_time,
-                    color: Color(0xFF341F1A),
-                  ),
-                  filled: true,
-                  fillColor: const Color(0xFFFFF8E7),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text(
-              "إلغاء",
-              style: TextStyle(
-                color: Color(0xFF341F1A),
-                fontFamily: "Alexandria",
-              ),
-            ),
-          ),
-
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFCFE1E2),
-              foregroundColor: const Color(0xFF341F1A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            onPressed: () {
-              setState(() {
-                tasks[index] = {
-                  "title": titleController.text,
-                  "description": descriptionController.text,
-                  "time": timeController.text,
-                  "isCompleted": tasks[index]["isCompleted"],
-                };
-              });
-
-              Navigator.pop(context);
-            },
-            child: const Text(
-              "حفظ",
-              style: TextStyle(
-                fontFamily: "Alexandria",
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+      );
+    };
+    _controller.loadTasks();
   }
 
-  Future<void> addTask() async {
-    final newTask = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AddTaskPage()),
-    );
-
-    if (newTask != null && newTask is Map<String, dynamic>) {
-      setState(() {
-        tasks.add({
-          "title": newTask["title"] ?? "",
-          "description": newTask["description"] ?? "",
-          "time": newTask["time"] ?? "",
-          "isCompleted": false,
-        });
-      });
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -211,7 +51,6 @@ class _TasksState extends State<Tasks> {
       child: SafeArea(
         child: Column(
           children: [
-            // العنوان وزر الإضافة
             Padding(
               padding: const EdgeInsets.all(16.0),
 
@@ -233,7 +72,7 @@ class _TasksState extends State<Tasks> {
                     backgroundColor: const Color(0xFFCFE1E2),
                     foregroundColor: const Color(0xFF341F1A),
 
-                    onPressed: addTask,
+                    onPressed: () => _controller.addTask(context),
 
                     child: const Icon(Icons.add),
                   ),
@@ -241,7 +80,6 @@ class _TasksState extends State<Tasks> {
               ),
             ),
 
-            // قائمة المهام
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -254,11 +92,11 @@ class _TasksState extends State<Tasks> {
                       horizontal: horizontalPadding,
                     ),
 
-                    itemCount: tasks.length,
+                    itemCount: _controller.tasks.length,
 
                     itemBuilder: (context, index) {
-                      final bool isCompleted =
-                          tasks[index]["isCompleted"] ?? false;
+                      final currentTask = _controller.tasks[index];
+                      final bool isCompleted = currentTask.isCompleted;
 
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -285,14 +123,13 @@ class _TasksState extends State<Tasks> {
                           crossAxisAlignment: CrossAxisAlignment.center,
 
                           children: [
-                            // معلومات المهمة
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
 
                                 children: [
                                   Text(
-                                    tasks[index]["title"],
+                                    currentTask.title,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -306,7 +143,7 @@ class _TasksState extends State<Tasks> {
                                   const SizedBox(height: 6),
 
                                   Text(
-                                    tasks[index]["description"],
+                                    currentTask.description,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: isCompleted
@@ -331,7 +168,7 @@ class _TasksState extends State<Tasks> {
                                       const SizedBox(width: 5),
 
                                       Text(
-                                        tasks[index]["time"],
+                                        formatDbTimeArabic(currentTask.time),
                                         style: TextStyle(
                                           fontSize: 13,
                                           color: isCompleted
@@ -360,12 +197,10 @@ class _TasksState extends State<Tasks> {
                               ),
                             ),
 
-                            // الأزرار
                             Row(
                               mainAxisSize: MainAxisSize.min,
 
                               children: [
-                                // تعديل
                                 IconButton(
                                   icon: Icon(
                                     Icons.edit,
@@ -381,11 +216,13 @@ class _TasksState extends State<Tasks> {
                                   constraints: const BoxConstraints(),
 
                                   onPressed: () {
-                                    editTask(index);
+                                    _controller.editTask(
+                                      currentTask.id,
+                                      context,
+                                    );
                                   },
                                 ),
 
-                                // حذف
                                 IconButton(
                                   icon: Icon(
                                     Icons.delete,
@@ -401,13 +238,10 @@ class _TasksState extends State<Tasks> {
                                   constraints: const BoxConstraints(),
 
                                   onPressed: () {
-                                    setState(() {
-                                      tasks.removeAt(index);
-                                    });
+                                    _controller.deleteTask(currentTask.id);
                                   },
                                 ),
 
-                                // مكتمل
                                 IconButton(
                                   icon: Icon(
                                     isCompleted
@@ -425,10 +259,7 @@ class _TasksState extends State<Tasks> {
                                   constraints: const BoxConstraints(),
 
                                   onPressed: () {
-                                    setState(() {
-                                      tasks[index]["isCompleted"] =
-                                          !isCompleted;
-                                    });
+                                    _controller.toggleComplete(currentTask);
                                   },
                                 ),
                               ],

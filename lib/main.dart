@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:hashplus_flutter/UI/welcome.dart';
-import 'package:hashplus_flutter/UI/login.dart';
-import 'package:hashplus_flutter/UI/signup.dart';
-import 'package:hashplus_flutter/UI/Home_page.dart';
-import 'package:hashplus_flutter/UI/mainpage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hashplus_flutter/UI/app_router.dart';
+import 'package:hashplus_flutter/constant/strings.dart' as strings;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+    url: strings.DBurl,
+    publishableKey: strings.DBpublishableKey,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      routes: {
-        '/': (context) => welcome(title: 'MyDay'),
-        '/login': (context) => const LoginPage(),
-        '/signup': (context) => const signup_page(),
-        '/home': (context) => const Mainpage(),
-      },
-
+      onGenerateRoute: AppRouter.generateRoute,
+      initialRoute: strings.welcome_screen,
+      theme: ThemeData(fontFamily: "Alexandria"),
       builder: (context, child) {
         return Directionality(textDirection: TextDirection.rtl, child: child!);
       },

@@ -1,4 +1,4 @@
-// TODO Implement this library.
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 class welcome extends StatelessWidget {
@@ -26,83 +26,103 @@ class welcome extends StatelessWidget {
         ),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(50),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(w * 0.05),
 
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: w * 0.9,
-                height: h * 0.6,
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  width: w * 0.9,
+                  height: h * 0.6,
 
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 255, 248),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                margin: const EdgeInsets.all(20),
-
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'asset/sun-logo-images-vector.jpg',
-                      fit: BoxFit.contain,
-                      height: 100,
-                      width: 100,
-                    ),
-
-                    const Text(
-                      "مرحبا بك في MyDay!",
-                      style: TextStyle(
-                        color: Color(0xFF341F1A),
-                        fontFamily: "Alexandria",
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 30,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 255, 255, 248),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
                       ),
-                    ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
 
-                    const Text(
-                      "نظّم مهامك، تابع إنجازك، واستمتع بيوم أكثر تنظيمًا",
-                      style: TextStyle(
-                        color: Color(0xFF341F1A),
-                        fontFamily: "Alexandria",
-                        fontSize: 20,
-                      ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          'asset/checklist-custom-image.png',
+                          height: h * 0.25,
+                          width: h * 0.25,
+                        ),
+
+                        const Text(
+                          "مرحبا بك في MyDay!",
+                          style: TextStyle(
+                            color: Color(0xFF341F1A),
+                            fontFamily: "Alexandria",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: DefaultTextStyle(
+                            style: const TextStyle(
+                              color: Color(0xFF341F1A),
+                              fontFamily: "Alexandria",
+                              fontSize: 25,
+                            ),
+                            child: AnimatedTextKit(
+                              repeatForever: true,
+                              animatedTexts: [
+                                FadeAnimatedText(
+                                  "نظّم مهامك،",
+                                  textAlign: TextAlign.right,
+                                ),
+                                FadeAnimatedText(
+                                  "تابع إنجازك،",
+                                  textAlign: TextAlign.right,
+                                ),
+                                FadeAnimatedText(
+                                  "واستمتع بيوم أكثر تنظيمًا",
+                                  textAlign: TextAlign.right,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 100),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFCFE1E2),
-                foregroundColor: const Color(0xFF341F1A),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-              child: const Text(
-                "Get Started ⭐",
-                style: TextStyle(
-                  color: Color(0xFF341F1A),
-                  fontWeight: FontWeight.bold,
-
-                  fontFamily: "Alexandria",
-                  fontSize: 20,
+              SizedBox(height: h * 0.04),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFCFE1E2),
+                  foregroundColor: const Color(0xFF341F1A),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: const Text(
+                  "Get Started ⭐",
+                  style: TextStyle(
+                    color: Color(0xFF341F1A),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "Alexandria",
+                    fontSize: 20,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
