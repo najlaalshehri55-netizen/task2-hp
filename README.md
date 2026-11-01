@@ -17,6 +17,15 @@ MyDay solves this by giving each user one place, tied to their account, to plan 
 - Dashboard that summarizes task progress and provides an overview of completed and pending tasks.
 - Responsive Arabic interface.
 
+## Screenshots
+| Welcome | Login | Dashboard | Calendar |
+|---|---|---|---|
+| ![Welcome](screenshots/welcome.png) | ![Login](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) | ![Calendar](screenshots/calender.png) |
+
+| Tasks List | Add Task | Edit Task | Settings |
+|---|---|---|---|
+| ![Tasks List](screenshots/tasks%20list.png) | ![Add Task](screenshots/add%20task.png) | ![Edit Task](screenshots/edit%20task.png) | ![Settings](screenshots/settings.png) |
+
 ## Technologies Used
 - Flutter for app development.
 - Dart as the programming language.
